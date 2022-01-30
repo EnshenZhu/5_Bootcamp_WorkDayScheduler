@@ -26,6 +26,10 @@ var creatTimeRow=function(timepoint){
     $(".timetable").append(timeEl);
 }
 
+for(var i=startHour;i<endHour;i++){
+    creatTimeRow(i)    
+}
+
 //Storage the data
 function dataStorage(contentID,taskContent){
     localStorage.setItem(contentID,JSON.stringify(taskContent))
@@ -36,25 +40,22 @@ function dataLoading(){
     for (var i=startHour;i<endHour;i++){
         
         var id="#"+i;
-        // console.log(id)
+        console.log(id)
+        console.log(typeof(id))
 
         var taskContent=JSON.parse(localStorage.getItem(i));
         console.log(taskContent)
 
-        var passage=$(id).children("task-description").class();
+        // var passage=document.querySelector(".timetable").children[i-startHour].children[1]
+        var passage=$(id).find("span")
         console.log(passage)
         
-        // console.log(passage)
-        // passage.text(taskContent);
+        passage.text(taskContent);
         // console.log(passage.text(taskContent))
     }    
 }
 
-// dataLoading();
-
-for(var i=startHour;i<endHour;i++){
-    creatTimeRow(i)    
-}
+dataLoading();
 
 $(".row").on("click","span",function(){
     taskText=$(this).text().trim()
@@ -65,25 +66,27 @@ $(".row").on("click","span",function(){
         .val(taskText);
 
     $(this).replaceWith(taskTextInput);
+
+    // auto focus new element
+    taskTextInput.trigger("focus");
 })
 
 $(".row").on("blur","textarea",function(){
-    taskText=$(this).parent().children("#task-description").val().trim();
-    console.log(taskText)
+    taskText=$(this).val()
 
     taskTextSpan=$("<span>")
         .addClass("past description col-8 col-md-9")
         .attr("id","task-description")
-        .val(taskText);
-    
-    //$(this).parent().children("#task-description").replaceWith(taskTextSpan);
+        .text(taskText);
+
+    $(this).replaceWith(taskTextSpan)
 })
 
 $(".row").on("click","button",function(){
     var contentID=$(this).parent().attr("id");
     // console.log(contentID);
-    var taskContent=$(this).siblings("#task-description").val().trim();
-    // console.log(taskContent);
+    var taskContent=$(this).siblings("#task-description")[0]
+        .textContent;    
 
     dataStorage(contentID,taskContent);
 })
