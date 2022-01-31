@@ -4,7 +4,7 @@
 
 ## <li>Landing Page
 <p>
-<a href="https://winniecmz.github.io/Bootcamp_Code_Refactor/index.html">Click Here</a>
+<a href="https://winniecmz.github.io/5_Bootcamp_WorkDayScheduler/">Click Here</a>
 </p>
 </li>
 
