@@ -3,7 +3,7 @@ var currentDate=new Date();
 $("#currentDay").text(moment().format('MMMM Do YYYY, h:mm:ss a'));
 
 startHour=4;
-endHour=10;
+endHour=22;
 
 // add time slot row
 var creatTimeRow=function(timepoint){
@@ -16,7 +16,7 @@ var creatTimeRow=function(timepoint){
         .addClass("time-block col-4 col-md-2")
         .text(moment.utc(i*3600*1000).format('HH:mm'));
     spanEl=$("<span>")
-        .addClass("past description col-8 col-md-9")
+        .addClass("present description col-8 col-md-9")
         .attr("id","task-description");
     saveBtnEl=$("<button>")
         .addClass("saveBtn col-12 col-md-1")
@@ -26,8 +26,29 @@ var creatTimeRow=function(timepoint){
     $(".timetable").append(timeEl);
 }
 
+var realTimeColor=function(){
+    var currentTime=moment().hour(); //check the current time with the moment.js
+    console.log(currentTime);
+
+    $(".timetable").find(".time-block").each(function(){
+        var listedTime=parseInt(this.textContent);
+        // console.log(listedTime)
+
+        if (currentTime > listedTime){
+            $(this).siblings("#task-description").removeClass('present');
+            $(this).siblings("#task-description").addClass('past');
+        }
+        
+        else if(currentTime < listedTime) {
+            $(this).siblings("#task-description").removeClass('present');
+            $(this).siblings("#task-description").addClass('future');
+        }
+    })
+}
+
 for(var i=startHour;i<endHour;i++){
-    creatTimeRow(i)    
+    creatTimeRow(i);
+    realTimeColor();    
 }
 
 //Storage the data
@@ -61,7 +82,7 @@ $(".row").on("click","span",function(){
     taskText=$(this).text().trim()
 
     taskTextInput=$("<textarea>")
-        .addClass("past description col-8 col-md-9")
+        .addClass("present description col-8 col-md-9")
         .attr("id","task-description")
         .val(taskText);
 
@@ -69,17 +90,22 @@ $(".row").on("click","span",function(){
 
     // auto focus new element
     taskTextInput.trigger("focus");
+
+    realTimeColor(); //reformat the color bar
 })
 
 $(".row").on("blur","textarea",function(){
     taskText=$(this).val()
 
     taskTextSpan=$("<span>")
-        .addClass("past description col-8 col-md-9")
+        .addClass("present description col-8 col-md-9")
         .attr("id","task-description")
         .text(taskText);
 
     $(this).replaceWith(taskTextSpan)
+
+    realTimeColor(); //reformat the color bar
+
 })
 
 $(".row").on("click","button",function(){
@@ -89,4 +115,7 @@ $(".row").on("click","button",function(){
         .textContent;    
 
     dataStorage(contentID,taskContent);
+
+    realTimeColor(); //reformat the color bar
+
 })
