@@ -28,7 +28,7 @@ var creatTimeRow=function(timepoint){
 
 var realTimeColor=function(){
     var currentTime=moment().hour(); //check the current time with the moment.js
-    console.log(currentTime);
+    // console.log(currentTime);
 
     $(".timetable").find(".time-block").each(function(){
         var listedTime=parseInt(this.textContent);
